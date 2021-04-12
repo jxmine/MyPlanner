@@ -13,9 +13,9 @@
             <th>Subject</th>
             <th>Task</th>
         </tr>
-        {% for task in class_id %}
+        {% for task in results %}
         <tr>
-            <td>{{ class_id[1] }}</td>
+            <td>{{ task[1] }}</td>
             <td>{{ task[2] }}</td>
         </tr>
         {% endfor %}
