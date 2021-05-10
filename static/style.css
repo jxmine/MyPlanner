@@ -1,49 +1,66 @@
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: #ff9999;
+}
+
+.topnav a.active {
+  background-color: #ff9999;
+  color: white;
+}
+
 table {
-    font-family: arial, sans-serif;
+    font-family: 'Nanum Pen Script';
     border-collapse: collapse;
-    width: 100%;
+    width: 98%;
+
   }
-  
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   td, th {
-    border: 1px solid #dddddd;
+    border: 2px solid #ffffff;
     text-align: left;
-    padding: 8px;
+    padding: 10px;
   }
 
   tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #ffe6e6;
   }
 
   body {
-    background-color: #ffe6ff;
+    background-color: #ffd9cc;
   }
 
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  
-  .topnav {
-    overflow: hidden;
-    background-color: #333;
-  }
-  
-  .topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-  }
-  
-  .topnav a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-  
-  .topnav a.active {
-    background-color: #660066;
-    color: white;
-  }
+body {
+  margin: 0;
+  font-family: 'Nanum Pen Script';
+  font-size: 30px;
+}
 
+header {
+  font-family: 'Fascinate Inline';font-size: 22px;
+  font-size: 80px;
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Fascinate Inline';font-size: 22px;
+  font-size: 60px;
+  text-align: center;
+}

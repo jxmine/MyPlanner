@@ -34,5 +34,9 @@ def contents():
     results = cursor.fetchall()
     return render_template("task_list.html", results=results)
 
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
 if __name__ == "__main__":
     app.run(debug=True)

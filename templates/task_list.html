@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
     {% block body %}   
     <h1>These are the tasks that you have!</h1>
-    <table>
+    <table class="center">
         <tr>
             <th>Subject</th>
             <th>Task</th>
@@ -16,4 +16,5 @@
             <td>{{ i[3] }}</td>
         </tr>
 {% endfor %}
+    </table>
 {% endblock %}
