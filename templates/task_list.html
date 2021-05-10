@@ -1,24 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static',filename='styles.css')}}">
-    <title>Task List</title>
-</head>
-<body>
+{% extends "layout.html" %}
+    {% block body %}   
+    <h1>These are the tasks that you have!</h1>
     <table>
         <tr>
             <th>Subject</th>
             <th>Task</th>
+            <th>Description</th>
+            <th>Due Date</th>
         </tr>
-        {% for task in results %}
+        {% for i in results %}
         <tr>
-            <td>{{ task[1] }}</td>
-            <td>{{ task[2] }}</td>
+            <td>{{ i[0] }}</td>
+            <td>{{ i[1] }}</td>
+            <td>{{ i[2] }}</td>
+            <td>{{ i[3] }}</td>
         </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+{% endfor %}
+{% endblock %}

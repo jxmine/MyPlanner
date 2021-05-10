@@ -22,12 +22,14 @@ def close_connection(exception):
 def home():
     return render_template("home.html")
 
-
-
+ 
 @app.route("/Task_List")
 def contents():
     cursor = get_db().cursor()
-    sql = "SELECT * FROM Task_List"
+    sql = """
+    SELECT Class.class, Task_List.task, To_Do_List.description, To_Do_List.due_date FROM To_Do_List 
+    JOIN Task_List ON To_Do_List.task_id = Task_List.id
+    JOIN Class ON To_Do_List.class_id = Class.id"""
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template("task_list.html", results=results)
