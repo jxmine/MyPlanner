@@ -34,6 +34,12 @@ def contents():
     results = cursor.fetchall()
     return render_template("task_list.html", results=results)
 
+
+@app.route("/edit")
+def edit():
+    return render_template("edit.html")
+
+
 @app.route("/login")
 def login():
     return render_template("login.html")
