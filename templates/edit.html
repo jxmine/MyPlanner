@@ -3,13 +3,13 @@
 <h1>hello</h1>
 <form action="/add" method="post">
   <label for="class">Class:</label><br>
-  <input type="text" id="class_id" name="class" value=""><br>
+  <input type="text" id="class_id" name="class" value="" maxlength="10"><br>
   <label for="task_id">Task:</label><br>
-  <input type="text" id="task_id" name="task" value=""><br>
+  <input type="text" id="task_id" name="task" value="" maxlength="20"><br>
   <label for="description">Description:</label><br>
-  <input type="text" id="description" name="description" value=""><br>
+  <input type="text" id="description" name="description" value="" maxlength="20"><br>
   <label for="due_date">Due Date:</label><br>
-  <input type="text" id="due_date" name="due_date" value=""><br>
+  <input type="text" id="due_date" name="due_date" value="" maxlength="10"><br>
   <input type="submit" value="add">
 </form>
 {% endblock %}
