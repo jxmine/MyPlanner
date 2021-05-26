@@ -1,11 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
 <h1>hello</h1>
-<label for="tasks">Choose a task:</label>
-<select id="tasks" name="tasks">
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="fiat">Fiat</option>
-  <option value="audi">Audi</option>
-</select>
+<form action="/add" method="post">
+  <label for="class">Class:</label><br>
+  <input type="text" id="class_id" name="class" value=""><br>
+  <label for="task_id">Task:</label><br>
+  <input type="text" id="task_id" name="task" value=""><br>
+  <label for="description">Description:</label><br>
+  <input type="text" id="description" name="description" value=""><br>
+  <label for="due_date">Due Date:</label><br>
+  <input type="text" id="due_date" name="due_date" value=""><br>
+  <input type="submit" value="add">
+</form>
 {% endblock %}
