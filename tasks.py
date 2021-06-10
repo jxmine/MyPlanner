@@ -52,10 +52,17 @@ def contents():
     cursor.execute(sql)
     results = cursor.fetchall()
     return render_template("task_list.html", results=results)
+    if not g.user:
+        return redirect(url_for("login"))
+
+    return render_template("Task_List.html")
 
 
 @app.route("/edit")
 def edit():
+    if not g.user:
+        return redirect(url_for("login"))
+
     return render_template("edit.html")
 
 @app.before_request
