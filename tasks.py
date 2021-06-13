@@ -22,6 +22,7 @@ users.append(User(id=2, username = 'hanan', password = 'test'))
 
 app = Flask(__name__)
 DATABASE = 'todolist.db'
+app.secret_key = "jasmine"
 
 def get_db():
     db = getattr(g, "_database", None)

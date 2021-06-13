@@ -22,6 +22,10 @@
   color: white;
 }
 
+.topnav-right {
+  float: right;
+}
+
 table {
     font-family: 'Nanum Pen Script';
     border-collapse: collapse;
