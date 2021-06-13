@@ -24,6 +24,8 @@
         {{ nav_link(url_for("contents"), "Tasks to Do") }}
         {{ nav_link(url_for("edit"), "Edit Tasks") }}
         {{ nav_link(url_for("login"), "Login") }}
+       {#{{ nav_link(url_for("register"), "register") }}#}
+        {{ nav_link(url_for("logout"), "logout") }}
     </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}

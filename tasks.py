@@ -93,6 +93,11 @@ def login():
 
     return render_template("login.html")
 
+@app.route('/logout')
+def logout():
+    session.pop("user_id", None)
+    return redirect(url_for('home'))
+
 @app.route("/add", methods=["POST"])
 def add_task():
     db = sqlite3.connect(DATABASE)
