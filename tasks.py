@@ -137,5 +137,13 @@ def add_task():
     return redirect("/Task_List")
 
 
+"""@app.route("/delete")
+def delete():
+    db = sqlite3.connect(DATABASE)
+    cursor = db.cursor()
+    
+    db.commit()"""
+
+
 if __name__ == "__main__":
     app.run(debug=True)
