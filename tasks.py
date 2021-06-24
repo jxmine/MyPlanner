@@ -18,7 +18,7 @@ class User:
 users = []
 users.append(User(id=1, username = 'jasmine', password = 'hungry'))
 users.append(User(id=2, username = 'hanan', password = 'test'))
-#adds users
+#adds intances of user classes
 
 app = Flask(__name__)
 DATABASE = 'todolist.db'
@@ -53,7 +53,7 @@ def home():
 def contents():
     cursor = sqlite3.connect(DATABASE).cursor()
     sql = """
-    SELECT Class.class, Task_List.task, To_Do_List.description, To_Do_List.due_date FROM To_Do_List 
+    SELECT To_Do_List.id, Class.class, Task_List.task, To_Do_List.description, To_Do_List.due_date FROM To_Do_List 
     JOIN Task_List ON To_Do_List.task_id = Task_List.id
     JOIN Class ON To_Do_List.class_id = Class.id"""
     #gets all the data from the database and show them as what they are instead of their ids
@@ -71,6 +71,17 @@ def edit():
         return redirect(url_for("login"))
 
     return render_template("edit.html")
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    if not g.user:
+        return redirect(url_for("login"))
+    db = get_db()
+    cursor = db.cursor()
+    for id in request.form.getlist('delete'):
+        cursor.execute("DELETE FROM To_Do_List WHERE id = ?", (id,))
+    db.commit()
+    return redirect(url_for("contents"))
 
 @app.before_request
 def before_request():

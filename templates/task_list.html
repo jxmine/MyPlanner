@@ -2,8 +2,10 @@
 {% block body %}
 <h1>TO DO LIST</h1>
 
+<form action="/delete" method="POST">
 <table class="center">
     <tr>
+        <th><button type="submit">Delete</button></th>
         <th>Subject</th>
         <th>Task</th>
         <th>Description</th>
@@ -11,11 +13,13 @@
     </tr>
     {% for i in results %}
     <tr>
-        <td>{{ i[0] }}</td>
+        <td><input type="checkbox" name="delete" value="{{ i[0] }}"></td>
         <td>{{ i[1] }}</td>
         <td>{{ i[2] }}</td>
         <td>{{ i[3] }}</td>
+        <td>{{ i[4] }}</td>
     </tr>
     {% endfor %}
 </table>
+</form>
 {% endblock %}
