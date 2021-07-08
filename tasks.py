@@ -125,6 +125,8 @@ def add_task():
     cursor = db.cursor()
 
     klass = request.form["class"]
+    if len(klass) > 20:
+        return redirect("/edit")
     klass_id = cursor.execute("SELECT id FROM Class WHERE class == ?", (klass,)).fetchone()
     if klass_id is None:
         cursor.execute("INSERT INTO Class(class) VALUES (?)", (klass,))
@@ -132,6 +134,8 @@ def add_task():
     klass_id = klass_id[0]
 
     task = request.form["task"]
+    if len(task) > 20:
+        return redirect("/edit")
     task_id = cursor.execute("SELECT id FROM Task_List WHERE task == ?", (task,)).fetchone()
     if task_id is None:
         cursor.execute("INSERT INTO Task_List(task) VALUES (?)", (task,))
@@ -139,7 +143,11 @@ def add_task():
     task_id = task_id[0]
 
     description = request.form["description"]
+    if len(description) > 20:
+        return redirect("/edit")
     new_due_date = request.form["due_date"]
+    if len(new_due_date) > 20:
+        return redirect("/edit")
     sql = "INSERT INTO To_Do_List(class_id, task_id, description, due_date) VALUES (?, ?, ?, ?)"
     print(klass_id, type(klass_id))
     cursor.execute(sql, (klass_id, task_id, description, new_due_date))
