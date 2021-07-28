@@ -16,8 +16,8 @@ class User:
         #shows the user's username instead of showing their id 
 
 users = []
-users.append(User(id=1, username = 'jasmine', password = 'hungry'))
-users.append(User(id=2, username = 'hanan', password = 'test'))
+users.append(User(id=0, username = 'jasmine', password = 'hungry'))
+users.append(User(id=1, username = 'hanan', password = 'test'))
 #adds intances of user classes
 
 app = Flask(__name__)
@@ -101,6 +101,11 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
+        if request.form.get("register"):
+            user = User(len(users), username, password)
+            users.append(user)
+            session["user_id"] = user.id
+            return redirect(url_for("home"))
         # user = None
         for user in users:
             if user.username == username and user.password == password:
@@ -108,8 +113,8 @@ def login():
                 return redirect(url_for("home"))
                 #if the username and password is correct redirects to home
 
-        flash("Failed to login")
-        return redirect(url_for("login"))
+            flash("Failed to login")
+            return redirect(url_for("login"))
 
     return render_template("login.html")
 
@@ -117,7 +122,7 @@ def login():
 def logout():
     session.pop("user_id", None)
     #removes the user from the session
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 @app.route("/add", methods=["POST"])
 def add_task():
