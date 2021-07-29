@@ -23,11 +23,16 @@
         {{ nav_link(url_for("home"), "Home") }}
         {{ nav_link(url_for("contents"), "Tasks to Do") }}
         {{ nav_link(url_for("edit"), "Edit Tasks") }}
-        {{ nav_link(url_for("login"), "Login") }}
         {#{{ nav_link(url_for("register"), "register") }}#}
-        <div class="topnav-right">
-            {{ nav_link(url_for("logout"), "Logout") }}
-        </div>
+        {% if g.user %}
+            <div class="topnav-right">
+                {{ nav_link(url_for("logout"), "Logout") }}
+            </div>
+        {% else %}
+            <div class="topnav-right">
+                {{ nav_link(url_for("login"), "Login") }}
+            </div>
+        {% endif %}
     </div>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
