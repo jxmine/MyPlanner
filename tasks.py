@@ -32,12 +32,14 @@ def get_db():
     return db
     #gets database
 
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, "_database", None)
     if db is not None:
         db.close()
         #close connection
+
 
 @app.route("/")
 def home():
@@ -72,6 +74,7 @@ def edit():
 
     return render_template("edit.html")
 
+
 @app.route("/delete", methods=["POST"])
 def delete():
     if not g.user:
@@ -82,6 +85,7 @@ def delete():
         cursor.execute("DELETE FROM To_Do_List WHERE id = ?", (id,))
     db.commit()
     return redirect(url_for("contents"))
+
 
 @app.before_request
 def before_request():
@@ -118,11 +122,13 @@ def login():
 
     return render_template("login.html")
 
+
 @app.route('/logout')
 def logout():
     session.pop("user_id", None)
     #removes the user from the session
     return redirect(url_for('login'))
+
 
 @app.route("/add", methods=["POST"])
 def add_task():
@@ -159,14 +165,6 @@ def add_task():
     #gets the data from the database and puts each of the different data into different tables
     db.commit()
     return redirect("/Task_List")
-
-
-"""@app.route("/delete")
-def delete():
-    db = sqlite3.connect(DATABASE)
-    cursor = db.cursor()
-    
-    db.commit()"""
 
 
 if __name__ == "__main__":
