@@ -43,13 +43,11 @@ def close_connection(exception):
 
 @app.route("/")
 def home():
-    if not g.user:
+    print(g.user)
+    if g.user == None:
         return redirect(url_for("login"))
-        #if the user isn't logged in, redirects them to the login page
-
     return render_template("home.html")
     #if the user is logged in, redirects the user to home
-
  
 @app.route("/Task_List")
 def contents():
