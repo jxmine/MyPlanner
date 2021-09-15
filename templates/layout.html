@@ -20,11 +20,10 @@
 
 <body>
     <div class="topnav">
-        {% if g.user %}
+        {% if current_user.is_authenticated %}
         {{ nav_link(url_for("home"), "Home") }}
         {{ nav_link(url_for("contents"), "Tasks to Do") }}
         {{ nav_link(url_for("edit"), "Edit Tasks") }}
-        {#{{ nav_link(url_for("register"), "register") }}#}
             <div class="topnav-right">
                 {{ nav_link(url_for("logout"), "Logout") }}
             </div>

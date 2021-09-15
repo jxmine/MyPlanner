@@ -1,28 +1,40 @@
 from sqlite3.dbapi2 import Cursor
-from flask import Flask, g, render_template, request, redirect, session, url_for
+from flask import Flask, g, render_template, request, redirect, session, url_for, flash
+from flask_login.utils import login_required, logout_user
+from werkzeug.security import check_password_hash, generate_password_hash
+from flask_login import LoginManager, login_user, UserMixin
 import sqlite3
-
-from flask.helpers import flash
 #importing all the things needed to run the website
 
-class User:
+class User(UserMixin):
     def __init__(self, id, username, password):
-        self.id = id
         self.username = username
         self.password = password
-    
-    def __repr__(self):
-        return f'<User: {self.username}>'
-        #shows the user's username instead of showing their id 
+        self.id = id
 
-users = []
-users.append(User(id=0, username = 'jasmine', password = 'hungry'))
-users.append(User(id=1, username = 'hanan', password = 'test'))
+# class User:
+#     def __init__(self, id, username, password):
+#         self.id = id
+#         self.username = username
+#         self.password = password
+    
+#     def __repr__(self):
+#         return f'<User: {self.username}>'
+#         #shows the user's username instead of showing their id 
+
+# users = []
+# users.append(User(id=0, username = 'jasmine', password = 'hungry'))
+# users.append(User(id=1, username = 'hanan', password = 'test'))
 #adds intances of user classes
 
 app = Flask(__name__)
+login_manager = LoginManager(app)
 DATABASE = 'todolist.db'
 app.secret_key = "jasmine"
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect('/login')
 
 def get_db():
     db = getattr(g, "_database", None)
@@ -32,6 +44,12 @@ def get_db():
     return db
     #gets database
 
+@login_manager.user_loader
+def load_user(user_id):
+    db = get_db()
+    user = db.execute('SELECT id, username, password FROM User WHERE id = ?', (user_id, )).fetchone()
+    if user:
+        return User(user[0], user[1], user[2])
 
 @app.teardown_appcontext
 def close_connection(exception):
@@ -42,14 +60,13 @@ def close_connection(exception):
 
 
 @app.route("/")
+@login_required
 def home():
-    print(g.user)
-    if g.user == None:
-        return redirect(url_for("login"))
     return render_template("home.html")
     #if the user is logged in, redirects the user to home
  
 @app.route("/Task_List")
+@login_required
 def contents():
     cursor = sqlite3.connect(DATABASE).cursor()
     sql = """
@@ -59,24 +76,19 @@ def contents():
     #gets all the data from the database and show them as what they are instead of their ids
     cursor.execute(sql)
     results = cursor.fetchall()
-    if not g.user:
-        return redirect(url_for("login"))
 
     return render_template("task_list.html", results=results)
 
 
 @app.route("/edit")
+@login_required
 def edit():
-    if not g.user:
-        return redirect(url_for("login"))
-
     return render_template("edit.html")
 
 
 @app.route("/delete", methods=["POST"])
+@login_required
 def delete():
-    if not g.user:
-        return redirect(url_for("login"))
     db = get_db()
     cursor = db.cursor()
     for id in request.form.getlist('delete'):
@@ -85,50 +97,56 @@ def delete():
     return redirect(url_for("contents"))
 
 
-@app.before_request
-def before_request():
-    g.user = None
-
-    if "user_id" in session:
-        for user in users:
-            if user.id == session["user_id"]:
-                g.user = user
-
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        session.pop("user_id", None)
-
+        db = get_db()
+        # session.pop("user_id", None)
         username = request.form["username"]
         password = request.form["password"]
 
-        if request.form.get("register"):
-            user = User(len(users), username, password)
-            users.append(user)
-            session["user_id"] = user.id
-            return redirect(url_for("home"))
-        # user = None
-        for user in users:
-            if user.username == username and user.password == password:
-                session['user_id'] = user.id
-                return redirect(url_for("home"))
-                #if the username and password is correct redirects to home
-
-            flash("Failed to login")
+        if username == "" or password == "":
+            flash("Please enter a username and a password")
             return redirect(url_for("login"))
+
+        if request.form.get('register'):
+            db.execute('INSERT INTO User (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
+            db.commit()
+            flash("You are now registered!")
+        user = db.execute('SELECT id, username, password FROM User WHERE username = ?', (username, )).fetchone()
+        if user and check_password_hash(user[2], password):
+            login_user(User(user[0], user[1], user[2]))
+            flash("You are logged in!")
+            return redirect(url_for("home"))
+
+
+        # if request.form.get("register"):
+        #     user = User(len(users), username, password)
+        #     users.append(user)
+        #     session["user_id"] = user.id
+        # user = None
+
+        # for user in users:
+        #     if user.username == username and user.password == password:
+        #         session['user_id'] = user.id
+        #         return redirect(url_for("home"))
+        #         #if the username and password is correct redirects to home
+
+        flash("Failed to login :(")
+        return redirect(url_for("login"))
 
     return render_template("login.html")
 
 
 @app.route('/logout')
 def logout():
-    session.pop("user_id", None)
+    logout_user()
     #removes the user from the session
     return redirect(url_for('login'))
 
 
 @app.route("/add", methods=["POST"])
+@login_required
 def add_task():
     db = sqlite3.connect(DATABASE)
     cursor = db.cursor()
