@@ -15,15 +15,17 @@
     <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
     <link href='https://fonts.googleapis.com/css?family=Nanum Pen Script' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Fascinate Inline' rel='stylesheet'>
+    <!--import google fonts-->
     <title>To Do List</title>
 </head>
 
 <body>
     <div class="topnav">
         {% if current_user.is_authenticated %}
+        <!--if user is logged in, allow access to the pages in the website-->
         {{ nav_link(url_for("home"), "Home") }}
         {{ nav_link(url_for("contents"), "Tasks to Do") }}
-        {{ nav_link(url_for("edit"), "Edit Tasks") }}
+        {{ nav_link(url_for("add"), "Add Tasks") }}
             <div class="topnav-right">
                 {{ nav_link(url_for("logout"), "Logout") }}
             </div>
