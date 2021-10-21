@@ -1,26 +1,10 @@
+from tasks import app, login_required, DATABASE, User
 from sqlite3.dbapi2 import Cursor
 from flask import Flask, g, render_template, request, redirect, session, url_for, flash
 from flask_login.utils import login_required, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import LoginManager, login_user, UserMixin, current_user
 import sqlite3
-#importing all the things needed to run the website
-
-class User(UserMixin):
-    def __init__(self, id, username, password):
-        self.username = username
-        self.password = password
-        self.id = id
-
-app = Flask(__name__)
-login_manager = LoginManager(app)
-DATABASE = 'todolist.db'
-app.secret_key = "jasmine"
-
-@login_manager.unauthorized_handler
-#redirects unauthorized users back to login
-def unauthorized_callback():
-    return redirect('/login')
 
 def get_db():
     db = getattr(g, "_database", None)
@@ -28,22 +12,6 @@ def get_db():
         db = g.database = sqlite3.connect(DATABASE)
         #gets the database
     return db
-
-@login_manager.user_loader
-def load_user(user_id):
-    db = get_db()
-    user = db.execute('SELECT id, username, password FROM User WHERE id = ?', (user_id, )).fetchone()
-    #finds the user in the database
-    if user:
-        return User(user[0], user[1], user[2])
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, "_database", None)
-    if db is not None:
-        db.close()
-    #close connection
-
 
 @app.route("/")
 @login_required
@@ -82,7 +50,7 @@ def delete():
         cursor.execute("DELETE FROM To_Do_List WHERE id = ?", (id,))
         #delete the tasks in the to do list according to the selected ids
     db.commit()
-    flash("The task/tasks has been deleted")
+    flash("The task has been deleted")
     return redirect(url_for("contents"))
 
 
@@ -154,7 +122,7 @@ def add_task():
     task_id = task_id[0]
 
     description = request.form["description"]
-    if len(description) > 30:
+    if len(description) > 20:
         return redirect("/add")
     new_due_date = request.form["due_date"]
 
@@ -165,7 +133,3 @@ def add_task():
     #gets the data from the database and puts each of the different data into different tables
     db.commit()
     return redirect("/Task_List")
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
