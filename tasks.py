@@ -99,12 +99,21 @@ def login():
             return redirect(url_for("login"))
 
         if request.form.get('register'):
+            sql = "SELECT username FROM User WHERE username = ?;"
+            cursor = db.cursor()
+            cursor.execute(sql, (username,))
+            users = cursor.fetchone()
+            if users is not None:
+            # if username taken, user would be redirected back to login
+                flash("This username is already taken")
+                return render_template("login.html")
             #inserts the user's username and pass into the database
-            db.execute('INSERT INTO User (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
-            #creates a password hash so the actual password won't be shown in the database           
-            db.commit()
-            flash("You are now registered!")
-        user = db.execute('SELECT id, username, password FROM User WHERE username = ?', (username, )).fetchone()
+            else:
+                db.execute('INSERT INTO User (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
+                #creates a password hash so the actual password won't be shown in the database           
+                db.commit()
+                flash("You are now registered!")
+                user = db.execute('SELECT id, username, password FROM User WHERE username = ?', (username, )).fetchone()
         if user and check_password_hash(user[2], password):
             #checks if the user is in the database
             #if so, logs user in
