@@ -1,5 +1,5 @@
 from sqlite3.dbapi2 import Cursor
-from flask import Flask, g, render_template, request, redirect, session, url_for, flash
+from flask import Flask, g, render_template, request, redirect, url_for, flash
 from flask_login.utils import login_required, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import LoginManager, login_user, UserMixin, current_user
@@ -92,6 +92,7 @@ def login():
         db = get_db()
         username = request.form["username"]
         password = request.form["password"]
+        user = db.execute('SELECT id, username, password FROM User WHERE username = ?', (username, )).fetchone()
 
         if username == "" or password == "":
             #user is redirected back to login if the required input values is blank 
@@ -103,17 +104,17 @@ def login():
             cursor = db.cursor()
             cursor.execute(sql, (username,))
             users = cursor.fetchone()
+            # get all usernames in database and store them in users
             if users is not None:
             # if username taken, user would be redirected back to login
                 flash("This username is already taken")
                 return render_template("login.html")
-            #inserts the user's username and pass into the database
             else:
                 db.execute('INSERT INTO User (username, password) VALUES (?, ?)', (username, generate_password_hash(password)))
                 #creates a password hash so the actual password won't be shown in the database           
                 db.commit()
                 flash("You are now registered!")
-                user = db.execute('SELECT id, username, password FROM User WHERE username = ?', (username, )).fetchone()
+
         if user and check_password_hash(user[2], password):
             #checks if the user is in the database
             #if so, logs user in
